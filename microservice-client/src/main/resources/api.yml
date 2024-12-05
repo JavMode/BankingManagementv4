@@ -1,0 +1,167 @@
+openapi: 3.0.0
+info:
+  title: Client Microservice
+  description: API to manage bank clients.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8090
+
+paths:
+
+  /clients:
+    get:
+      tags:
+        - client
+      summary: Get all clients
+      operationId: getClients
+      responses:
+        200:
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClientResponse'
+    post:
+      tags:
+        - client
+      summary: Create a new client
+      operationId: createClient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientRequest'
+      responses:
+        201:
+          description: Client created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientResponse'
+        400:
+          description: Invalid input
+  /clients/{identifier}:
+    get:
+      tags:
+        - client
+      summary: Get client by identifier
+      operationId: getClientByIdentifier
+      parameters:
+        - in: path
+          name: identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClientResponse'
+        400:
+          description: Invalid identifier supplied
+        404:
+          description: Client not found
+    put:
+      tags:
+        - client
+      summary: Update a client by dni or ruc
+      operationId: updateClientByIdentifier
+      parameters:
+        - in: path
+          name: identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientRequest'
+      responses:
+        200:
+          description: Client updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientResponse'
+        400:
+          description: Invalid body supplied
+        404:
+          description: Client not found
+    delete:
+      tags:
+        - client
+      summary: Delete a client by dni or ruc
+      operationId: deleteClientByIdentifier
+      parameters:
+        - in: path
+          name: identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: No content
+        400:
+          description: Invalid body supplied
+        404:
+          description: Client not found
+
+components:
+  schemas:
+    ClientRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Juan
+        lastName:
+          type: string
+          example: Sánchez
+        email:
+          type: string
+          example: juan.sanchez@gmail.com
+        clientType:
+          type: string
+          enum: [PERSONAL, BUSINESS]
+        identifier:
+          type: string
+          example: "123456789"
+        companyName:
+          type: string
+          example: ""
+    ClientResponse:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Juan
+        lastName:
+          type: string
+          example: Sánchez
+        email:
+          type: string
+          example: juan.sanchez@gmail.com
+        clientType:
+          type: string
+          enum: [PERSONAL, BUSINESS]
+        identifier:
+          type: string
+          example: "123456789"
+        companyName:
+          type: string
+          example: ""
+
+
+tags:
+  - name: client
+    description: Operations about client

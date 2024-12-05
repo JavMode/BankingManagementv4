@@ -1,0 +1,121 @@
+openapi: 3.0.0
+info:
+  title: Credit Microservice
+  description: API to manage credits.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8092
+
+paths:
+
+  /credits:
+    post:
+      tags:
+        - credit
+      summary: Create a new credit card
+      operationId: createCredit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditRequest'
+      responses:
+        201:
+          description: Credit created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditResponse'
+        400:
+          description: Invalid input
+  /credits/{accountNumber}:
+    get:
+      tags:
+        - credit
+      summary: Find credit by Account Number
+      operationId: findCreditByAccountNumber
+      parameters:
+        - in: path
+          name: accountNumber
+          description: Account number of credit to return
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditResponse'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Credit not found
+  /credits/client/{id}:
+    get:
+      tags:
+        - credit
+      summary: Find all credits of a client
+      operationId: getCreditsOfClient
+      parameters:
+        - in: path
+          name: id
+          description: account number of client to return
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreditResponse'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Account not found
+
+components:
+  schemas:
+    CreditRequest:
+      type: object
+      properties:
+        cardType:
+          type: string
+          enum: [PERSONAL, BUSINESS]
+        clientId:
+          type: string
+          example: 1
+    CreditResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 1
+        accountNumber:
+          type: string
+          example: 123456789
+        creditType:
+          type: string
+          enum: [PERSONAL, BUSINESS]
+        balance:
+          type: number
+          format: float
+          example: 10.0
+        creditLimit:
+          type: number
+          format: float
+          example: 100.0
+        clientId:
+          type: string
+          example: 1
+
+tags:
+  - name: credit
+    description: Operations about credits
