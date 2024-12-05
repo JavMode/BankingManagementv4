@@ -1,0 +1,180 @@
+openapi: 3.0.0
+info:
+  title: Transaction Microservice
+  description: API to manage transactions.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8093
+
+paths:
+
+  /transactions/account/deposit/{accountNumber}:
+    post:
+      tags:
+        - transaction
+      summary: Register a transaction
+      operationId: depositAccount
+      parameters:
+        - in: path
+          name: accountNumber
+          description: account number of transaction to return
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+      responses:
+        201:
+          description: Transaction registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        400:
+          description: Invalid input
+  /transactions/account/withdraw/{accountNumber}:
+    post:
+      tags:
+        - transaction
+      summary: Register a transaction
+      operationId: withdrawAccount
+      parameters:
+        - in: path
+          name: accountNumber
+          description: account number of transaction to return
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+      responses:
+        201:
+          description: Transaction registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        400:
+          description: Invalid input
+  /transactions/credit/payment/{accountNumber}:
+    post:
+      tags:
+        - transaction
+      summary: Register a transaction
+      operationId: paymentCredit
+      parameters:
+        - in: path
+          name: accountNumber
+          description: account number of transaction to return
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+      responses:
+        201:
+          description: Transaction registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        400:
+          description: Invalid input
+  /transactions/credit/consumption/{accountNumber}:
+    post:
+      tags:
+        - transaction
+      summary: Register a transaction
+      operationId: consumptionCredit
+      parameters:
+        - in: path
+          name: accountNumber
+          description: account number of transaction to return
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+      responses:
+        201:
+          description: Transaction registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        400:
+          description: Invalid input
+  /transactions/{id}:
+    get:
+      tags:
+        - transaction
+      summary: Find transaction by ID
+      operationId: findTransactionById
+      parameters:
+        - in: path
+          name: id
+          description: ID of transaction to return
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Credit not found
+
+components:
+  schemas:
+    TransactionRequest:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+          example: 10.0
+        accountNumber:
+          type: string
+          example: 123456789
+    TransactionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 1
+        transactionType:
+          type: string
+          enum: [DEPOSITO, RETIRO, PAGO, CONSUMO]
+        amount:
+          type: number
+          format: float
+          example: 10.0
+        accountNumber:
+          type: string
+          example: 123456789
+
+tags:
+  - name: transaction
+    description: Operations about transactions
