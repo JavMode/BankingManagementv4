@@ -1,0 +1,167 @@
+openapi: 3.0.0
+info:
+  title: Card Microservice
+  description: API to manage bank cards.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8094
+
+paths:
+
+  /cards:
+    get:
+      tags:
+        - card
+      summary: Get all cards
+      operationId: getCards
+      responses:
+        200:
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardResponse'
+    post:
+      tags:
+        - card
+      summary: Create a new card
+      operationId: createCard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardRequest'
+      responses:
+        201:
+          description: Card created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardResponse'
+        400:
+          description: Invalid input
+  /cards/payment:
+    post:
+      tags:
+        - card
+      summary: Pay amount with card
+      operationId: payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardOperationRequest'
+      responses:
+        201:
+          description: Card created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardOperationResponse'
+        400:
+          description: Invalid input
+  /cards/withdraw:
+    post:
+      tags:
+        - card
+      summary: Withdraw amount with card
+      operationId: withdraw
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardOperationRequest'
+      responses:
+        201:
+          description: Card created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardOperationResponse'
+        400:
+          description: Invalid input
+  /cards/{cardNumber}:
+    delete:
+      tags:
+        - card
+      summary: Delete a card by card number
+      operationId: deleteCardByCardNumber
+      parameters:
+        - in: path
+          name: cardNumber
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: No content
+        400:
+          description: Invalid body supplied
+        404:
+          description: Client not found
+
+components:
+  schemas:
+    CardRequest:
+      type: object
+      properties:
+        cardHolder:
+          type: string
+          example: juan sanchez
+        accounts:
+          type: array
+          items:
+            type: string
+            example: [123456789, 123456789]
+    CardResponse:
+      type: object
+      properties:
+        cardHolder:
+          type: string
+          example: juan sanchez
+        accounts:
+          type: array
+          items:
+            type: string
+            example: [123456789, 123456789]
+        cardNumber:
+          type: string
+          example: 2190382193217231
+        cvv:
+          type: integer
+          example: 956
+        expiryDate:
+          type: string
+          format: date
+    CardOperationRequest:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: double
+          example: 23.5
+        cardNumber:
+          type: string
+          example: 2190382193217231
+        cvv:
+          type: integer
+          example: 956
+        expiryDate:
+          type: string
+          format: date
+    CardOperationResponse:
+      type: object
+      properties:
+        description:
+          type: string
+          example: "La operacion se realizo adecuadamente"
+
+tags:
+  - name: card
+    description: Operations about card
